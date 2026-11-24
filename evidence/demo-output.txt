@@ -1,0 +1,32 @@
+$ python3 main.py
+MODULE 8: REPLICATION & CONSISTENCY
+One primary | One secondary | Client-selectable reads
+
+=== 1. SUCCESSFUL REPLICATION ===
+Initial state:
+CLIENT READ primary:   stock=10, version=0
+CLIENT READ secondary: stock=10, version=0
+WRITE primary: stock=11, version=1
+PASS: primary receives the new value
+CLIENT READ primary:   stock=11, version=1
+CLIENT READ secondary: stock=11, version=1
+PASS: both replicas contain stock=11 after replication
+
+=== 2. STALE READ WHILE REPLICATION IS PAUSED ===
+Reset both replicas to the required stock=10 baseline:
+CLIENT READ primary:   stock=10, version=2
+CLIENT READ secondary: stock=10, version=2
+REPLICATION PAUSED: secondary delivery is delayed; reads remain available
+WRITE primary: stock=9, version=3 (queued for secondary)
+CLIENT READ primary:   stock=9, version=3
+CLIENT READ secondary: stock=10, version=2
+PASS: stale read observed: primary=9, secondary=10
+PASS: secondary is behind the primary version
+
+=== 3. RECOVERY AND CONVERGENCE ===
+REPLICATION RESUMED: background worker delivers the queued update
+CLIENT READ primary:   stock=9, version=3
+CLIENT READ secondary: stock=9, version=3
+PASS: replicas converge to stock=9 at the same version
+
+ALL DEMONSTRATIONS PASSED

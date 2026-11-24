@@ -1,0 +1,10 @@
+$ python3 -m unittest -v
+test_invalid_inputs (test_inventory.InventoryTests) ... ok
+test_queued_writes_converge_to_latest_version (test_inventory.InventoryTests) ... ok
+test_stale_read_and_recovery (test_inventory.InventoryTests) ... ok
+test_successful_replication (test_inventory.InventoryTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.026s
+
+OK
